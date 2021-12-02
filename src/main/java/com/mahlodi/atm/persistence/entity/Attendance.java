@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "attendance")
@@ -13,7 +15,17 @@ public class Attendance  {
     @GeneratedValue
     private Long id;
     private boolean active = true;
-    @ManyToOne(targetEntity = User.class,cascade = javax.persistence.CascadeType.ALL
+    @ManyToOne(targetEntity = Student.class,cascade = javax.persistence.CascadeType.ALL
     ,fetch = FetchType.LAZY)
-    private User user;
+    private Student student;
+    private LocalDate date;
+
+    public Attendance() {
+    }
+
+    public Attendance(boolean active, Student student, LocalDate date) {
+        this.active = active;
+        this.student = student;
+        this.date = date;
+    }
 }

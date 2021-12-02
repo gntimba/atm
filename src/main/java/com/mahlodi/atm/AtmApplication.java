@@ -22,10 +22,10 @@ public class AtmApplication  implements WebMvcConfigurer {
 				.addResourceLocations("classpath:/META-INF/resources/webjars/");
 	}
 
-//	@Override
-//	public void addCorsMappings(CorsRegistry registry) {
-//		registry.addMapping("/**");
-//	}
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**");
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(AtmApplication.class, args);

@@ -84,8 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http
-                .cors().and()    //Disabling CSRF as not using form based login
+        http.csrf().disable()
+                .cors().and()
                 .authorizeRequests()
                 .antMatchers("/signup", "/login","/images/**","/swagger-ui/**"
                 ,"/swagger-resources/**","/v2/**").permitAll()
