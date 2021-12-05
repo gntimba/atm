@@ -1,15 +1,16 @@
 package com.mahlodi.atm.Controller;
 
+import com.mahlodi.atm.DTO.AttDTO;
+import com.mahlodi.atm.DTO.AttendanceDTO;
 import com.mahlodi.atm.DTO.userDTO;
+import com.mahlodi.atm.Service.AttendanceService;
 import com.mahlodi.atm.Service.StudentService;
+import com.mahlodi.atm.persistence.entity.Attendance;
 import com.mahlodi.atm.persistence.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ import java.util.List;
 public class StudentController {
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+   private AttendanceService attendanceService;
 
 
     @PostMapping("/student")
@@ -43,6 +47,34 @@ public class StudentController {
             List<Student> id = studentService.findAll();
             resp = new ResponseEntity<List<Student>>(
                     id, HttpStatus.CREATED
+            );
+            return resp;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(
+                    "users not found",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PostMapping("/addAttendance")
+    public ResponseEntity<?> addStudent(@RequestBody AttDTO id) {
+        ResponseEntity<Attendance> resp = null;
+            Attendance att = attendanceService.saveAttendance(id.getId());
+            resp = new ResponseEntity<Attendance>(
+                    att, HttpStatus.CREATED
+            );
+            return resp;
+    }
+
+    @GetMapping("/getAttendance")
+    public ResponseEntity<?> getAttendance() {
+        ResponseEntity<List<AttendanceDTO>> resp = null;
+        try {
+            List<AttendanceDTO> id = attendanceService.findTodayAttendance();
+            resp = new ResponseEntity<List<AttendanceDTO>>(
+                    id, HttpStatus.OK
             );
             return resp;
         } catch (Exception e) {

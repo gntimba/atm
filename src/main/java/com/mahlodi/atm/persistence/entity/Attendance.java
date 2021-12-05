@@ -23,9 +23,9 @@ public class Attendance  {
     public Attendance() {
     }
 
-    public Attendance(boolean active, Student student, LocalDate date) {
-        this.active = active;
+    public Attendance( Student student) {
+        this.active = true;
         this.student = student;
-        this.date = date;
+        this.date = LocalDate.now();
     }
 }
