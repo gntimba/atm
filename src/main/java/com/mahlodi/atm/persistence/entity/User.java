@@ -29,6 +29,7 @@ public class User   implements Serializable {
     private Date dob;
     @JsonIgnore
     private String password;
+    @Column(unique=true)
     private String email;
     @ElementCollection(fetch = FetchType.EAGER)
     @JsonIgnore
