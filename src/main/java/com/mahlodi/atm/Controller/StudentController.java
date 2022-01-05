@@ -2,6 +2,7 @@ package com.mahlodi.atm.Controller;
 
 import com.mahlodi.atm.DTO.AttDTO;
 import com.mahlodi.atm.DTO.AttendanceDTO;
+import com.mahlodi.atm.DTO.StudentAttendanceDTO;
 import com.mahlodi.atm.DTO.userDTO;
 import com.mahlodi.atm.Service.AttendanceService;
 import com.mahlodi.atm.Service.StudentService;
@@ -20,7 +21,7 @@ public class StudentController {
     private StudentService studentService;
 
     @Autowired
-   private AttendanceService attendanceService;
+    private AttendanceService attendanceService;
 
 
     @PostMapping("/student")
@@ -40,6 +41,7 @@ public class StudentController {
         }
 
     }
+
     @GetMapping("/student")
     public ResponseEntity<?> getStudent() {
         ResponseEntity<List<Student>> resp = null;
@@ -61,11 +63,11 @@ public class StudentController {
     @PostMapping("/addAttendance")
     public ResponseEntity<?> addStudent(@RequestBody AttDTO id) {
         ResponseEntity<Attendance> resp = null;
-            Attendance att = attendanceService.saveAttendance(id.getId());
-            resp = new ResponseEntity<Attendance>(
-                    att, HttpStatus.CREATED
-            );
-            return resp;
+        Attendance att = attendanceService.saveAttendance(id.getId());
+        resp = new ResponseEntity<Attendance>(
+                att, HttpStatus.CREATED
+        );
+        return resp;
     }
 
     @GetMapping("/getAttendance")
@@ -84,5 +86,35 @@ public class StudentController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("/getByWeek")
+    public ResponseEntity<?> getByWeek(@RequestParam(required = false) Long id) {
+        if (id == null) {
+            List<StudentAttendanceDTO> attendanceDTOS = attendanceService.findAllByWeek();
+            return new ResponseEntity<List<StudentAttendanceDTO>>(
+                    attendanceDTOS, HttpStatus.OK
+            );
+        } else {
+            StudentAttendanceDTO attendanceDTOS = attendanceService.getWeeklyStudentAttendance(id);
+            return new ResponseEntity<StudentAttendanceDTO>(
+                    attendanceDTOS, HttpStatus.OK
+            );
+        }
+    }
+
+    @GetMapping("/getByMonth")
+    public ResponseEntity<?> getByMonth(@RequestParam(required = false) Long id) {
+        if (id == null) {
+            List<StudentAttendanceDTO> attendanceDTOS = attendanceService.findAllByMonth();
+            return new ResponseEntity<List<StudentAttendanceDTO>>(
+                    attendanceDTOS, HttpStatus.OK
+            );
+        } else {
+            StudentAttendanceDTO attendanceDTOS = attendanceService.getMonthlyStudentAttendance(id);
+            return new ResponseEntity<StudentAttendanceDTO>(
+                    attendanceDTOS, HttpStatus.OK
+            );
+        }
     }
 }

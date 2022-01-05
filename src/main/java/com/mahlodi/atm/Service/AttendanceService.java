@@ -2,6 +2,7 @@ package com.mahlodi.atm.Service;
 
 import com.mahlodi.atm.DTO.AttendanceDTO;
 import com.mahlodi.atm.DTO.Stat;
+import com.mahlodi.atm.DTO.StudentAttendanceDTO;
 import com.mahlodi.atm.Exception.AttendanceExist;
 import com.mahlodi.atm.Exception.NotFoundException;
 import com.mahlodi.atm.persistence.Dao.AttendanceDao;
@@ -54,5 +55,59 @@ public class AttendanceService {
             attendanceDTOS.add(attendanceDTO);
         }
         return attendanceDTOS;
+    }
+
+    public List<StudentAttendanceDTO> findAllByWeek() {
+        List<StudentAttendanceDTO> attendanceDTOS = new ArrayList<>();
+        List<Student> students = studentService.findAll();
+        for (Student student : students) {
+            StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+            studentAttendanceDTO.setStudent(student);
+            List<Attendance> attendances = attendanceDao.findAttendanceWeeklyID(student.getStudentNo());
+            attendances.forEach(attendance -> studentAttendanceDTO.addAttendance(attendance));
+            attendanceDTOS.add(studentAttendanceDTO);
+        }
+        return attendanceDTOS;
+
+    }
+
+    public List<StudentAttendanceDTO> findAllByMonth() {
+        List<StudentAttendanceDTO> attendanceDTOS = new ArrayList<>();
+        List<Student> students = studentService.findAll();
+        for (Student student : students) {
+            StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+            studentAttendanceDTO.setStudent(student);
+            List<Attendance> attendances = attendanceDao.findAttendanceMonthlyID(student.getStudentNo());
+            attendances.forEach(attendance -> studentAttendanceDTO.addAttendance(attendance));
+            attendanceDTOS.add(studentAttendanceDTO);
+        }
+        return attendanceDTOS;
+
+    }
+
+    public StudentAttendanceDTO getWeeklyStudentAttendance(Long id) {
+        Student student = studentService.findById(id);
+        if(student == null)
+            throw new NotFoundException("No student found for id " + id);
+        StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+        studentAttendanceDTO.setStudent(student);
+        List<Attendance> attendances = attendanceDao.findAttendanceWeeklyID(id);
+        if(attendances.isEmpty())
+            throw new NotFoundException("No attendance found for student " + id);
+        attendances.forEach(attendance -> studentAttendanceDTO.addAttendance(attendance));
+        return studentAttendanceDTO;
+    }
+
+    public StudentAttendanceDTO getMonthlyStudentAttendance(Long id) {
+        Student student = studentService.findById(id);
+        if(student == null)
+            throw new NotFoundException("No student found for id " + id);
+        StudentAttendanceDTO studentAttendanceDTO = new StudentAttendanceDTO();
+        studentAttendanceDTO.setStudent(student);
+        List<Attendance> attendances = attendanceDao.findAttendanceMonthlyID(id);
+        if(attendances.isEmpty())
+            throw new NotFoundException("No attendance found for student " + id);
+        attendances.forEach(attendance -> studentAttendanceDTO.addAttendance(attendance));
+        return studentAttendanceDTO;
     }
 }

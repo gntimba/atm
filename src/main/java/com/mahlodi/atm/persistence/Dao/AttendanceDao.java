@@ -19,4 +19,10 @@ public interface AttendanceDao extends JpaRepository<Attendance, Long> {
 
     @Query("select a from Attendance a where a.date = CURRENT_DATE")
     List<Attendance> findTodayPresentAttendance();
+
+    @Query(value = "SELECT * FROM attendance WHERE WEEK(date) = WEEK(NOW()) AND student_id =?1", nativeQuery = true)
+    List<Attendance> findAttendanceWeeklyID(Long id);
+
+    @Query(value = "SELECT * FROM attendance WHERE MONTH(date) = MONTH(NOW()) AND student_id =?1", nativeQuery = true)
+    List<Attendance> findAttendanceMonthlyID(Long id);
 }
