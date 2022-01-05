@@ -30,7 +30,7 @@ public class ErrorHandler {
         return new ResponseEntity<ErrorType>(
                 new ErrorType(
                         new Date(System.currentTimeMillis()).toString(),
-                        "409- BAD REQUEST",
+                        "409 - Duplicate",
                         bre.getMessage()),
                 HttpStatus.CONFLICT);
     }

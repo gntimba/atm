@@ -2,8 +2,10 @@ package com.mahlodi.atm.Service;
 
 
 import com.mahlodi.atm.DTO.userDTO;
+import com.mahlodi.atm.Exception.AttendanceExist;
 import com.mahlodi.atm.model.ROLE;
 import com.mahlodi.atm.persistence.Dao.UserDao;
+import com.mahlodi.atm.persistence.entity.Student;
 import com.mahlodi.atm.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,17 +31,18 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder bCryptEncoder;
 
     @Transactional
-    public Long save(userDTO user) {
+    public User save(userDTO user) {
+        if (userDao.findByEmail(user.getEmail()).isPresent()) {
+            throw new AttendanceExist("Email already exist");
+        }
 
         User newUser = new User(user);
-
-
         newUser.setPassword(bCryptEncoder.encode(user.getPassword()));
         Set<ROLE> roles = new HashSet<>();
         roles.add(ROLE.LECTURER);
         roles.add(ROLE.ADMIN);
         newUser.setRoles(roles);
-        return userDao.save(newUser).getId();
+        return userDao.save(newUser);
     }
 
     public Optional<User> findById(Long id) {

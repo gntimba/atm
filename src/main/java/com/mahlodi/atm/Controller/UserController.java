@@ -6,6 +6,7 @@ import com.mahlodi.atm.Exception.NotFoundException;
 import com.mahlodi.atm.Service.UserService;
 import com.mahlodi.atm.model.UserRequest;
 import com.mahlodi.atm.model.UserResponse;
+import com.mahlodi.atm.persistence.entity.Student;
 import com.mahlodi.atm.persistence.entity.User;
 import com.mahlodi.atm.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +30,10 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody userDTO user) {
-        ResponseEntity<String> resp = null;
-        try {
-            Long id = service.save(user);
-            resp = new ResponseEntity<String>(
-                    "USer with  '" + id + "' created", HttpStatus.CREATED
+            User st = service.save(user);
+            return new ResponseEntity<String>(
+                    "USer with  '" + st.getId() +" "+ st.getEmail()+ "' created", HttpStatus.CREATED
             );
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp = new ResponseEntity<String>(
-                    "Unable to save User",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return resp;
     }
 
     @GetMapping("/find/{id}")
