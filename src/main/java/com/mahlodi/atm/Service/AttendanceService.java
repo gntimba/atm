@@ -11,6 +11,7 @@ import com.mahlodi.atm.persistence.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +39,14 @@ public class AttendanceService {
 
     }
 
-    public List<AttendanceDTO> findTodayAttendance() {
+    public List<AttendanceDTO> findTodayAttendance( LocalDate date) {
         List<AttendanceDTO> attendanceDTOS = new ArrayList<>();
         List<Student> students = studentService.findAll();
-        List<Attendance> attendances = attendanceDao.findTodayPresentAttendance();
+        List<Attendance> attendances = attendanceDao.findTodayPresentAttendance(date);
         for (Student student : students) {
             Long id = student.getStudentNo();
             String fullNames = student.getFirstName() + " " + student.getLastName();
-            AttendanceDTO attendanceDTO = new AttendanceDTO(id, fullNames);
+            AttendanceDTO attendanceDTO = new AttendanceDTO(id, fullNames,date);
             for (Attendance attendance : attendances) {
                 if (attendance.getStudent().getStudentNo().equals(id)) {
                     attendanceDTO.setStatus(Stat.PRESENT);

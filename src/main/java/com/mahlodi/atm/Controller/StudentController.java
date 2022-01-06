@@ -9,10 +9,13 @@ import com.mahlodi.atm.Service.StudentService;
 import com.mahlodi.atm.persistence.entity.Attendance;
 import com.mahlodi.atm.persistence.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -71,12 +74,18 @@ public class StudentController {
     }
 
     @GetMapping("/getAttendance")
-    public ResponseEntity<?> getAttendance() {
+    public ResponseEntity<?> getAttendance(@RequestParam(required = false)
+                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)  LocalDate date) {
         ResponseEntity<List<AttendanceDTO>> resp = null;
         try {
-            List<AttendanceDTO> id = attendanceService.findTodayAttendance();
+            List<AttendanceDTO> attendance = new ArrayList<>();
+            if(date == null) {
+                 attendance = attendanceService.findTodayAttendance(LocalDate.now());
+            }else{
+                attendance = attendanceService.findTodayAttendance(date);
+            }
             resp = new ResponseEntity<List<AttendanceDTO>>(
-                    id, HttpStatus.OK
+                    attendance, HttpStatus.OK
             );
             return resp;
         } catch (Exception e) {

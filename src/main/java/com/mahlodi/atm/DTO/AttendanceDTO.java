@@ -13,10 +13,10 @@ public class AttendanceDTO {
 
     public AttendanceDTO() {
     }
-    public AttendanceDTO(Long id, String fullNAmes) {
+    public AttendanceDTO(Long id, String fullNAmes, LocalDate date) {
         this.id = id;
         this.status = Stat.ABSENT;
-        this.date = LocalDate.now();
+        this.date = date;
         this.fullNames = fullNAmes;
     }
 

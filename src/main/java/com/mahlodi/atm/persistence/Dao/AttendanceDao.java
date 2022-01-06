@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,9 @@ public interface AttendanceDao extends JpaRepository<Attendance, Long> {
 
     @Query("select a from Attendance a where a.date = CURRENT_DATE")
     List<Attendance> findTodayPresentAttendance();
+
+    @Query("select a from Attendance a where a.date =?1")
+    List<Attendance> findTodayPresentAttendance(LocalDate date);
 
     @Query(value = "SELECT * FROM attendance WHERE WEEK(date) = WEEK(NOW()) AND student_id =?1", nativeQuery = true)
     List<Attendance> findAttendanceWeeklyID(Long id);
